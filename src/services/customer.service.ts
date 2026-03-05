@@ -12,6 +12,11 @@ export class CustomerService{
             }
         })
 
+        if(!response.ok){
+            const errTxt = "Failed to get all customer"
+            throw new Error(errTxt)
+        }
+
         const data: Customer[] = await response.json()
         // console.log(data)
         return data
@@ -25,24 +30,24 @@ export class CustomerService{
             }
         })
 
+        if(!response.ok){
+            const errTxt = "Failed to get customer"
+            throw new Error(errTxt)
+        }
+
         const data: Customer = await response.json()
         // console.log(data)
         return data
     }
 
     async create(customer: Customer) {
-        const payload = {
-            "customer_name": customer.name,
-            "customer_email": customer.email,
-            "customer_password": customer.password
-        }
 
         const response = await fetch(this.baseUrl, {
             method: "POST",
             headers: {
                 "Content-Type":"application/json"
             },
-            body: JSON.stringify(payload)
+            body: JSON.stringify(customer)
         })
         
         if(!response.ok){
@@ -51,7 +56,7 @@ export class CustomerService{
         }
 
         // console.log(response)
-        return response
+        return response.json()
     }
 
     async update (customer: Customer) {
@@ -75,7 +80,7 @@ export class CustomerService{
         }
 
         // console.log(response)
-        return response
+        return response.json()
     }
 
     async delete (id: string) {
@@ -92,6 +97,6 @@ export class CustomerService{
         }
 
         // console.log(response)
-        return response
+        return response.json()
     }
 }

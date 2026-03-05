@@ -5,17 +5,22 @@ import { Customer } from "../../src/models/customer.model"
 import { CustomerService } from "../../src/services/customer.service"
 import { StoreService } from "@/src/services/store.service"
 import { Store } from "@/src/models/store.model"
+import { Product } from "@/src/models/product.model"
+import { ProductService } from "@/src/services/product.service"
 
 export default function Manager() {
   const [customers, setCustomers] = useState<Customer[]>([])
   const [customer, setCustomer] = useState<Customer>()
   const [store, setStore] = useState<Store>()
   const [stores, setStores] = useState<Store[]>([])
+  const [product, setProduct] = useState<Product>()
+  const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const service = new CustomerService()
   const storeService = new StoreService()
+  const productService = new ProductService()
 
   const handleGetAllCustomers = async () => {
     try {
@@ -146,6 +151,57 @@ export default function Manager() {
 
   }
 
+  
+  const handleProductService = async (value: string) => {
+    try {
+      setLoading(true)
+      setError(null)
+
+      let data
+      if(value == "Get") {
+        data = await productService.getById('1')
+        setProduct(data)
+      }
+      if(value == "GetAll") {
+        data = await productService.getAll()
+        setProducts(data)
+      }
+      if(value == "Post") {
+        const mockProduct: Product = {
+          product_id: 2,
+          product_name: 'Heineken Zero',
+          product_description: 'Cerveja 600ml sem alcool',
+          product_price: 6.59,
+          store_owner_id: 1
+        }
+        data = await productService.create(mockProduct)
+      }
+      if(value == "Patch") {
+        const mockProduct: Product = {
+          product_id: 3,
+          product_name: 'Corona',
+          product_description: 'Cerveja 600ml',
+          product_price: 5.59,
+          store_owner_id: 2
+        }
+        data = await productService.update(mockProduct)
+      }
+      if(value == "Del") {
+        data = await productService.delete('4')
+      }
+      console.log(data)
+
+    } catch (err) {
+      setError("Failed to Delete Customer")
+      console.error(err)
+
+    } finally {
+      setLoading(false)
+    }
+
+  }
+
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8 gap-2">
       <h1 className="text-2xl font-bold mb-6">
@@ -224,6 +280,45 @@ export default function Manager() {
         className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
       >
         {loading ? "Loading..." : "Delete Store"}
+      </button>
+
+      <h1 className="text-2xl font-bold mb-6 mt-6">
+        Test Product API
+      </h1>
+      
+      <button
+        onClick={() => handleProductService('GetAll')}
+        className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+      >
+        {loading ? "Loading..." : "Get All Products"}
+      </button>
+
+      <button
+        onClick={() => handleProductService('Get')}
+        className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+      >
+        {loading ? "Loading..." : "Get Product"}
+      </button>
+
+      <button
+        onClick={() => handleProductService('Post')}
+        className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+      >
+        {loading ? "Loading..." : "Create Product"}
+      </button>
+
+      <button
+        onClick={() => handleProductService('Patch')}
+        className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+      >
+        {loading ? "Loading..." : "Update Product"}
+      </button>
+
+      <button
+        onClick={() => handleProductService('Del')}
+        className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+      >
+        {loading ? "Loading..." : "Delete Product"}
       </button>
 
       {error && (
