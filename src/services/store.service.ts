@@ -11,6 +11,11 @@ export class StoreService {
             }
         })
 
+        if(!response.ok){
+            const errTxt = "Failed to get all stores"
+            throw new Error(errTxt)
+        }
+
         const data: Store[] = await response.json()
         return data
 
@@ -23,6 +28,11 @@ export class StoreService {
                 "Content-Type":"application/json"
             }
         })
+
+        if(!response.ok){
+            const errTxt = "Failed to get store"
+            throw new Error(errTxt)
+        }
 
         const data: Store = await response.json()
         return data

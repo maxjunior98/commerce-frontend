@@ -11,6 +11,11 @@ export class ProductService {
             }
         })
 
+        if(!response.ok){
+            const errTxt = "Failed to get all products"
+            throw new Error(errTxt)
+        }
+
         const data: Product[] = await response.json()
         return data
     }
@@ -22,6 +27,11 @@ export class ProductService {
                 "Content-Type":"application/json"
             }
         })
+
+        if(!response.ok){
+            const errTxt = "Failed to get product"
+            throw new Error(errTxt)
+        }
 
         const data: Product = await response.json()
         return data
